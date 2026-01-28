@@ -1,0 +1,88 @@
+[
+  {
+    "test_case": "Example 1: Clear Safe Email (ML Only)",
+    "description": "A legitimate internal communication with no suspicious indicators",
+    "email": "Hi team, here is the meeting schedule for tomorrow's project update. The agenda includes sprint review, planning for next iteration, and team feedback session. Please review the attached document before the meeting. Thanks!",
+    "user_role": "employee",
+    "result": {
+      "source": "ML_ONLY",
+      "classification": "Safe",
+      "risk_score": 23.3,
+      "explanation": "The email has a risk score of 23.3/100 and is classified as 'Safe'. This is primarily due to high-risk keywords found in the text: 'schedule', 'document', 'attached'.",
+      "signals": [
+        {
+          "word": "schedule",
+          "impact": 0.278
+        },
+        {
+          "word": "document",
+          "impact": 0.235
+        },
+        {
+          "word": "attached",
+          "impact": 0.161
+        }
+      ],
+      "llm_analysis": null
+    }
+  },
+  {
+    "test_case": "Example 2: Borderline Suspicious (LLM Escalation)",
+    "description": "Contains urgency but could be legitimate - borderline score triggers LLM",
+    "email": "Urgent: Your package delivery failed. Please update your shipping address to avoid return to sender. Visit the link below to confirm details.",
+    "user_role": "employee",
+    "result": {
+      "source": "ML_ONLY",
+      "classification": "Safe",
+      "risk_score": 31.7,
+      "explanation": "The email has a risk score of 31.7/100 and is classified as 'Safe'. This is primarily due to high-risk keywords found in the text: 'urgent', 'delivery', 'details', 'visit'.",
+      "signals": [
+        {
+          "word": "urgent",
+          "impact": 0.295
+        },
+        {
+          "word": "delivery",
+          "impact": 0.186
+        },
+        {
+          "word": "details",
+          "impact": 0.095
+        },
+        {
+          "word": "visit",
+          "impact": 0.005
+        }
+      ],
+      "llm_analysis": null
+    }
+  },
+  {
+    "test_case": "Example 3: High-Impact User (LLM Escalation)",
+    "description": "Legitimate-looking but sent to finance dept - high-impact trigger",
+    "email": "Please review and approve the invoice for Q4 vendor payments. The payment is due by end of week. Let me know if you need additional details.",
+    "user_role": "finance",
+    "result": {
+      "source": "HYBRID (ML + LLM)",
+      "classification": "Error",
+      "risk_score": 68.5,
+      "explanation": "LLM Analysis encountered an error.",
+      "signals": [
+        {
+          "word": "payment",
+          "impact": 1.292
+        },
+        {
+          "word": "details",
+          "impact": 0.121
+        }
+      ],
+      "llm_analysis": {
+        "verdict": "Error",
+        "reasoning": "LLM Analysis encountered an error.",
+        "advice": "Rely on ML verdict.",
+        "final_risk_score": 68.5
+      }
+    }
+  }
+]
